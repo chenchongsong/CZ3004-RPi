@@ -62,7 +62,12 @@ class bt_conn(object):
     def write_to_bt(self, message):
         try:
             self.client_socket.send(message)
-            print("\nwrote to BT", message)
+            
+##            if len(message)>20:
+##                image = Image.open(BytesIO(message))
+##                image.save('tryimage.jpeg','JPEG')
+                
+            print("\nwrote to BT")
 
         except BluetoothError:
             print("\nBluetooth Error. Connection lost")
