@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # coding: utf-8
 
 import socket, sys
@@ -21,8 +20,6 @@ class im_conn(object):
         self.conn = None
         self.im_conn_flag = False
         self.camera = picamera.PiCamera()
-#        self.camera.vflip = True
-#        self.camera.hflip = True
         self.camera.framerate = 30
         self.camera.start_preview()
         time.sleep(2)
@@ -38,7 +35,6 @@ class im_conn(object):
             self.conn.listen(5)
             self.client = self.conn.accept()[0]
             self.w_client = self.client.makefile('wb')
-##            self.r_client = self.client.makefile('rb')
             print('Created IMG connection with client')
             self.im_conn_flag = True
 
@@ -90,42 +86,6 @@ class im_conn(object):
         try:
             image_data = self.client.recv(1024)
             return image_data
-##            image_len = struct.unpack('<L', self.r_client.read(struct.calcsize('<L')))[0]
-####            if not image_len:
-####                break
-##            
-##            image_stream = io.BytesIO()
-##            image_stream.write(self.r_client.read(image_len))
-##            image_stream.seek(0)
-##
-##            if image_stream!=b'':
-##                image_data = image_stream.getvalue()
-##                image_stream.seek(0)
-##                image_stream.truncate()
-##                print('\nread from IMG')
-##
-##                return image_data
-##
-##        except struct.error:
-##            pass
         
         except Exception as e:
             print('ERROR IMG read message', str(e))
-
-
-
-##if __name__ == "__main__":
-##    server = server_conn()
-##    server.init_conn()
-##
-####    server.send_image()
-##    server.send_image()
-####    server.send_image()
-####    server.send_image()
-####    for i in range (0,3):
-####        server.send_image()
-####        time.sleep(2)
-##
-##    server.close_conn()
-
-

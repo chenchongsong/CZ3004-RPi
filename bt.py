@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-#import subprocess
-
 from bluetooth import *
 
 
@@ -62,11 +60,6 @@ class bt_conn(object):
     def write_to_bt(self, message):
         try:
             self.client_socket.send(message)
-            
-##            if len(message)>20:
-##                image = Image.open(BytesIO(message))
-##                image.save('tryimage.jpeg','JPEG')
-                
             print("\nwrote to BT")
 
         except BluetoothError:
@@ -91,16 +84,3 @@ class bt_conn(object):
 
         except Exception as e:
             print("ERROR BT read message", str(e))
-
-
-
-##if __name__ == "__main__":
-##        print("Running Main")
-##        bt = bt_conn()
-##        bt.init_bt_conn()
-##        
-##        while True:
-##            print("data received: %s " % bt.read_from_bt())
-##            bt.write_to_bt("received")
-##        print("closing sockets")
-##        bt.close_bt_conn()
