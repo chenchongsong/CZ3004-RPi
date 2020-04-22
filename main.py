@@ -17,7 +17,6 @@ import struct
 
 class Main(threading.Thread):
 
-
     def __init__(self):
         threading.Thread.__init__(self)
 
@@ -26,7 +25,6 @@ class Main(threading.Thread):
         self.sr_thread = sr_conn()
         self.im_thread = im_conn()
         
-
         print('CONNECT TO BT')
         self.bt_thread.init_bt_conn()
         print('CONNECT TO PC')
@@ -38,12 +36,8 @@ class Main(threading.Thread):
 
         time.sleep(1)
 
-
-
     # PC Functions #
-
     def writePC(self, msg_to_pc):
-
         if self.pc_thread.check_conn_status() and msg_to_pc:
             self.pc_thread.write_to_pc(msg_to_pc.encode())
             print ("Message sent to [PC]: %s" % msg_to_pc)
@@ -51,9 +45,7 @@ class Main(threading.Thread):
 
         return False 
 
-
     def readPC(self):
-
         while True:
             read_pc_msg = self.pc_thread.read_from_pc()
             if read_pc_msg!=None:
@@ -89,11 +81,8 @@ class Main(threading.Thread):
                         else:
                             print ("\nIncorrect header from PC, ", read_pc_msg)
 
-
-# Android/BT functions #
-
+    # Android/BT functions #
     def writeBT(self, msg_to_bt):
-
         if self.bt_thread.bt_check_conn_status() and msg_to_bt:
             if type(msg_to_bt) is bytes:
                 self.bt_thread.write_to_bt(msg_to_bt)
@@ -106,7 +95,6 @@ class Main(threading.Thread):
         return False
 
     def readBT(self):
-
         while True:
             read_bt_msg = self.bt_thread.read_from_bt()
             if read_bt_msg!=None:
@@ -133,7 +121,6 @@ class Main(threading.Thread):
                         else:
                             print ("\nIncorrect header from BT, ", read_bt_msg)
 
-
     # Serial Comm functions #
     def writeSR(self, msg_to_sr):
         if self.sr_thread.check_sr_conn() and msg_to_sr:
@@ -159,7 +146,7 @@ class Main(threading.Thread):
                             print ("Message from [ROBOT] --> [PC]: %s" % read_sr_msg[2:] + "|")
                             sr_msgSent = self.writePC(read_sr_msg[2:])
                             
-                        # Robot to Android #
+                        # Robot to Android
                         elif (read_sr_msg[0:2].lower() == 'an'):
                             print ("Message from [ROBOT] --> [ANDROID]: %s" % read_sr_msg[2:])
                             self.writeBT(read_sr_msg[2:])
@@ -169,10 +156,8 @@ class Main(threading.Thread):
                             print ("\nIncorrect header from SR, ", read_sr_msg)
                             pass
 
-
     # Image Comm functions #
     def writeIM(self, img_coor):
-
         if self.im_thread.check_conn_status() and img_coor:
             self.im_thread.write_image(img_coor.encode())
             print ("Message sent to [IMG]: %s" % img_coor)
@@ -181,27 +166,15 @@ class Main(threading.Thread):
         return False
 
     def readIM(self):
-
         while True:
             read_im_msg = self.im_thread.read_image()
             if read_im_msg != None and read_im_msg!=b"":
-
-##                # split into raw image and label+coor
-##                label_str = read_im_msg.split(b'\n')[-1]
-##                image_data = read_im_msg[:(len(read_im_msg)-len(label_str))]
-
                 if self.im_thread.check_conn_status():
-                    #IMG to Android
+                    # IMG to Android
                     print ("Message from [IMG] --> [ANDROID]: %s" % read_im_msg)
                     im_msgSent = self.writeBT(read_im_msg)
-##                    print ("Message from [IMG] --> [ANDROID]: raw image")
-##                    im_msgSent = self.writeBT(image_data)
-
-                        
-
 
     def initialize_threads(self):
-
         # PC read and write thread
         readt_pc = threading.Thread(target=self.readPC, name="pc_read_thread")
         writet_pc = threading.Thread(target=self.writePC, args=("",), name="pc_write_thread")
@@ -242,12 +215,9 @@ class Main(threading.Thread):
         writet_sr.start()
         readt_im.start()
         writet_im.start()
-        
-
         print ("All threads initialized successfully")
 
     def initialize_pc_thread(self):
-
         readt_pc = threading.Thread(target=self.readPC, name="pc_read_thread")
         writet_pc = threading.Thread(target=self.writePC, args=("",), name="pc_write_thread")
         print('PC thread created')
@@ -258,7 +228,6 @@ class Main(threading.Thread):
 
 
     def initialize_bt_thread(self):
-        
         readt_bt = threading.Thread(target=self.readBT, name="bt_read_thread")
         writet_bt = threading.Thread(target=self.writeBT, args=("",), name="bt_write_thread")
         print('BT thread created')
@@ -269,7 +238,6 @@ class Main(threading.Thread):
 
 
     def initialize_sr_thread(self):
-
         readt_sr = threading.Thread(target=self.readSR, name="sr_read_thread")
         writet_sr = threading.Thread(target=self.writeSR, args=("",), name="sr_write_thread")
         print('SR thread created')
@@ -280,27 +248,19 @@ class Main(threading.Thread):
 
         
     def close_all_sockets(self):
-
         self.pc_thread.close_conn()
         self.bt_thread.close_bt_conn()
         self.sr_thread.close_serial_conn()
         self.sr_thread.close_im_conn()
-
         print ("Ended all threads")
 
     def keep_main_alive(self):
-
         while True:
             time.sleep(1)
 
 
-
 if __name__ == '__main__':
-
-
     conn_obj = Main()
     conn_obj.initialize_threads()
     conn_obj.keep_main_alive()
     conn_obj.close_all_sockets()
-
-

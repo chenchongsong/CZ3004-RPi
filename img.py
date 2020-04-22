@@ -38,8 +38,6 @@ class im_conn(object):
             print('Created IMG connection with client')
             self.im_conn_flag = True
 
-
-
         except Exception as e:
             print('ERROR init_img_conn', str(e))
 
@@ -55,17 +53,15 @@ class im_conn(object):
             print('ERROR IMG close connection')
 
     def check_conn_status(self):
-
         return self.im_conn_flag
 
 
     def write_image(self, img_coor):
-
         try:
             stream = io.BytesIO()
             self.camera.capture(stream, 'jpeg')
 
-            #ending marker
+            # ending marker
             if b'end' in img_coor:
                 self.w_client.write(struct.pack('<L', 0))
                 self.w_client.flush()
@@ -80,9 +76,7 @@ class im_conn(object):
         except Exception as e:
             print('ERROR IMG write', str(e))
 
-
     def read_image(self):
-
         try:
             image_data = self.client.recv(1024)
             return image_data
